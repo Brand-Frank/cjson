@@ -104,7 +104,7 @@ cJSON *cJSON_Parse(const char *value);
 char *cJSON_Print(cJSON *item);
 
 /**
- *@brief	从根节点开始递归删除json树各个及诶单，示范内存
+ *@brief	从根节点开始递归删除json树各个及诶单，释放内存
  *@param	c(cJson *c):cJSON节点
  *@return	void
 */
@@ -185,28 +185,110 @@ void cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item);
 */
 void cJSON_AddItemToArray(cJSON *array, cJSON *item);
 
-
+/**
+ * @brief 
+ * 
+ * @param value 
+ * @param return_parse_end 
+ * @param require_null_terminated 
+ * @return cJSON* 
+ */
 cJSON *cJSON_ParseWithOpts(const char *value, const char **return_parse_end, int require_null_terminated);
 
 cJSON *cJSON_New_Item();
 
+/**
+ * @brief 跳过一些字符
+ * 
+ * @param in 
+ * @return const char* 
+ */
 const char *skip(const char *in);
 char *cJSON_GetEndPosition(void);
 
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param value 
+ * @return const char* 
+ */
 const char *parse_value(cJSON *item, const char *value);
 
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param str 
+ * @return const char* 
+ */
 const char* parse_string(cJSON *item, const char *str);
 const char* parse_number(cJSON *item, const char *num);
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param value 
+ * @return const char* 
+ */
 const char* parse_Array(cJSON *item, const char *value);
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param value 
+ * @return const char* 
+ */
 const char* parse_Object(cJSON *item, const char *value);
 
 char *cJSON_strdup(const char *str);
+
+/**
+ * @brief 打印数字
+ * 
+ * @param item 
+ * @return char* 
+ */
 char *print_number(cJSON *item);
+
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param isName 
+ * @return char* 
+ */
 char *print_string(cJSON *item);
 
 //["OSCAR",123,XXX]
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param depth 
+ * @param fmt 
+ * @return char* 
+ */
 char *print_array(cJSON *item, int depth, int fmt);
+
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param depth 
+ * @param fmt 
+ * @return char* 
+ */
 char *print_object(cJSON *item, int depth, int fmt);
+
+/**
+ * @brief 
+ * 
+ * @param item 
+ * @param depth 
+ * @param fmt 
+ * @return char* 
+ */
 char *print_value(cJSON *item,int depth, int fmt);
 
 cJSON *cJSON_DetachItemFromArray(cJSON *array, int which);

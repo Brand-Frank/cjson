@@ -7,10 +7,6 @@
 #include <ctype.h>
 #include "cJson.h"
 
-/**
- * @brief 
- * 
- */
 static void *(*cJSON_malloc)(size_t sz) = malloc;
 static void(*cJSON_free)(void *ptr) = free;
 
@@ -28,11 +24,6 @@ cJSON *cJSON_New_Item()
 	return node;
 }
 
-/**
- * @brief 删除结构体对象
- * 
- * @param c 
- */
 void cJSON_Delete(cJSON *c)
 {
 	cJSON *next;
@@ -47,12 +38,6 @@ void cJSON_Delete(cJSON *c)
 	}
 }
 
-/**
- * @brief 跳过一些字符
- * 
- * @param in 
- * @return const char* 
- */
 const char *skip(const char *in)
 {
 	while (in && *in && ((unsigned char)*in<=32))
@@ -115,13 +100,6 @@ const char* parse_string(cJSON *item, const char *str)
 	return ptr;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param num 
- * @return const char* 
- */
 const char* parse_number(cJSON *item, const char *num)
 {
 	double n = 0;		//最终计算的数字
@@ -184,13 +162,6 @@ const char* parse_number(cJSON *item, const char *num)
 	return num;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param value 
- * @return const char* 
- */
 const char* parse_Array(cJSON *item, const char *value)
 {
 	//["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -231,13 +202,6 @@ const char* parse_Array(cJSON *item, const char *value)
 	return NULL;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param value 
- * @return const char* 
- */
 const char* parse_Object(cJSON *item, const char *value)
 {
 	cJSON *child;
@@ -301,13 +265,6 @@ const char* parse_Object(cJSON *item, const char *value)
 
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param value 
- * @return const char* 
- */
 const char *parse_value(cJSON *item, const char *value)
 {
 	if (!value) return NULL;
@@ -339,25 +296,11 @@ const char *parse_value(cJSON *item, const char *value)
 	return NULL;
 }
 
-/**
- * @brief 
- * 
- * @param value 
- * @return cJSON* 
- */
 cJSON *cJSON_Parse(const char *value)
 {
 	return cJSON_ParseWithOpts(value, 0, 0);
 }
 
-/**
- * @brief 
- * 
- * @param value 
- * @param return_parse_end 
- * @param require_null_terminated 
- * @return cJSON* 
- */
 cJSON *cJSON_ParseWithOpts(const char *value, const char **return_parse_end, int require_null_terminated)
 {
 	const char *end = NULL;
@@ -393,12 +336,6 @@ cJSON *cJSON_ParseWithOpts(const char *value, const char **return_parse_end, int
 }
 
 /*==========================================================================*/
-/**
- * @brief 
- * 
- * @param str 
- * @return char* 
- */
 char *cJSON_strdup(const char *str)
 {
 	char *copy = NULL;
@@ -412,12 +349,6 @@ char *cJSON_strdup(const char *str)
 	return copy;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @return char* 
- */
 char *print_number(cJSON *item)
 {
 	char *str = NULL;
@@ -450,13 +381,6 @@ char *print_number(cJSON *item)
 
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param isName 
- * @return char* 
- */
 char *print_string(cJSON *item, int isName)
 {
 	char *str = NULL;
@@ -541,14 +465,6 @@ char *print_string(cJSON *item, int isName)
 	return out;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param depth 
- * @param fmt 
- * @return char* 
- */
 char *print_array(cJSON *item, int depth, int fmt)
 {
 	char **entries; //char *entries[];
@@ -630,14 +546,6 @@ char *print_array(cJSON *item, int depth, int fmt)
 	return out;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param depth 
- * @param fmt 
- * @return char* 
- */
 char *print_object(cJSON *item, int depth, int fmt)
 {
 	char **entries = NULL, **names = NULL;
@@ -759,14 +667,6 @@ char *print_object(cJSON *item, int depth, int fmt)
 	return out;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @param depth 
- * @param fmt 
- * @return char* 
- */
 char *print_value(cJSON *item, int depth, int fmt)
 {
 	char *out = NULL;
@@ -786,12 +686,6 @@ char *print_value(cJSON *item, int depth, int fmt)
 	return out;
 }
 
-/**
- * @brief 
- * 
- * @param item 
- * @return char* 
- */
 char *cJSON_Print(cJSON *item)
 {
 	return print_value(item, 0, 1);
@@ -799,11 +693,6 @@ char *cJSON_Print(cJSON *item)
 
 
 /*==============================================================*/
-/**
- * @brief 
- * 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateNull(void)
 {
 	cJSON *item = cJSON_New_Item();
@@ -811,11 +700,6 @@ cJSON *cJSON_CreateNull(void)
 	return item;
 }
 
-/**
- * @brief 
- * 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateTrue(void)
 {
 	cJSON *item = cJSON_New_Item();
@@ -823,11 +707,6 @@ cJSON *cJSON_CreateTrue(void)
 	return item;
 }
 
-/**
- * @brief 
- * 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateFalse(void)
 {
 	cJSON *item = cJSON_New_Item();
@@ -835,12 +714,6 @@ cJSON *cJSON_CreateFalse(void)
 	return item;
 }
 
-/**
- * @brief 
- * 
- * @param b 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateBool(int b)
 {
 	cJSON *item = cJSON_New_Item();
@@ -848,12 +721,6 @@ cJSON *cJSON_CreateBool(int b)
 	return item;
 }
 
-/**
- * @brief 
- * 
- * @param num 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateNumber(double num)
 {
 	cJSON *item = cJSON_New_Item();
@@ -866,12 +733,6 @@ cJSON *cJSON_CreateNumber(double num)
 	return item;
 }
 
-/**
- * @brief 
- * 
- * @param string 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateString(const char *string)
 {
 	cJSON *item = cJSON_New_Item();
@@ -890,18 +751,12 @@ cJSON *cJSON_CreateArray(void)
 	return item;
 }
 
-/**
- * @brief 创建cjson对象
- * 
- * @return cJSON* 
- */
 cJSON *cJSON_CreateObject(void)
 {
 	cJSON *item = cJSON_New_Item();
 	if (item)item->type = cJSON_Object;
 	return item;
 }
-
 
 void suffix_obect(cJSON *prev, cJSON *item)
 {
