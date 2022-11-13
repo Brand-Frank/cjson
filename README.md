@@ -45,48 +45,48 @@ you have a char * to it. Everything is a cJSON struct.
 Get it parsed:
 
 ```c
-	cJSON *root = cJSON_Parse(my_json_string);
+cJSON *root = cJSON_Parse(my_json_string);
 ```
 
 This is an object. We're in C. We don't have objects. But we do have structs.
 What's the framerate?
 
 ```c
-	cJSON *format = cJSON_GetObjectItem(root,"format");
-	int framerate = cJSON_GetObjectItem(format,"frame rate")->valueint;
+cJSON *format = cJSON_GetObjectItem(root,"format");
+int framerate = cJSON_GetObjectItem(format,"frame rate")->valueint;
 ```
 
 Want to change the framerate?
 
 ```c
-	cJSON_GetObjectItem(format,"frame rate")->valueint=25;
+cJSON_GetObjectItem(format,"frame rate")->valueint=25;
 ```
 
 Back to disk?
 
 ```c
-	char *rendered=cJSON_Print(root);
+char *rendered=cJSON_Print(root);
 ```
 
 Finished? Delete the root (this takes care of everything else).
 
 ```c
-	cJSON_Delete(root);
+cJSON_Delete(root);
 ```
 
 That's AUTO mode. If you're going to use Auto mode, you really ought to check pointers
 before you dereference them. If you want to see how you'd build this struct in code?
 
 ```c
-	cJSON *root,*fmt;
-	root=cJSON_CreateObject();	
-	cJSON_AddItemToObject(root, "name", cJSON_CreateString("Jack (\"Bee\") Nimble"));
-	cJSON_AddItemToObject(root, "format", fmt=cJSON_CreateObject());
-	cJSON_AddStringToObject(fmt,"type",		"rect");
-	cJSON_AddNumberToObject(fmt,"width",		1920);
-	cJSON_AddNumberToObject(fmt,"height",		1080);
-	cJSON_AddFalseToObject (fmt,"interlace");
-	cJSON_AddNumberToObject(fmt,"frame rate",	24);
+cJSON *root,*fmt;
+root=cJSON_CreateObject();	
+cJSON_AddItemToObject(root, "name", cJSON_CreateString("Jack (\"Bee\") Nimble"));
+cJSON_AddItemToObject(root, "format", fmt=cJSON_CreateObject());
+cJSON_AddStringToObject(fmt,"type",		"rect");
+cJSON_AddNumberToObject(fmt,"width",		1920);
+cJSON_AddNumberToObject(fmt,"height",		1080);
+cJSON_AddFalseToObject (fmt,"interlace");
+cJSON_AddNumberToObject(fmt,"frame rate",	24);
 ```
 
 Hopefully we can agree that's not a lot of code? There's no overhead, no unnecessary setup.
