@@ -169,11 +169,11 @@ let you invoke it per-item. For the item above, your callback might look like th
 int callback(const char *name,int type,cJSON *item)
 {
 	if (!strcmp(name,"name"))	{ /* populate name */ }
-	else if (!strcmp(name,"format/type")	{ /* handle "rect" */ }
-	else if (!strcmp(name,"format/width")	{ /* 800 */ }
-	else if (!strcmp(name,"format/height")	{ /* 600 */ }
-	else if (!strcmp(name,"format/interlace")	{ /* false */ }
-	else if (!strcmp(name,"format/frame rate")	{ /* 24 */ }
+	else if (!strcmp(name,"format/type"))	{ /* handle "rect" */ }
+	else if (!strcmp(name,"format/width"))	{ /* 800 */ }
+	else if (!strcmp(name,"format/height"))	{ /* 600 */ }
+	else if (!strcmp(name,"format/interlace"))	{ /* false */ }
+	else if (!strcmp(name,"format/frame rate"))	{ /* 24 */ }
 	return 1;
 }
 ```
@@ -243,7 +243,6 @@ You can attach the objects, as above, and later add children to each
 of those objects.
 
 As soon as you call cJSON_Print, it renders the structure to text.
-
 
 
 The test.c code shows how to handle a bunch of typical cases. If you uncomment

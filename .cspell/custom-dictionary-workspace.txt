@@ -1,5 +1,18 @@
 # Custom Dictionary Words
 CJSON
+dorecurse
+malloc
+newprefix
 obect
+sprintf
+strcmp
+strlen
+struct
+structs
 subscale
 templen
+tokenise
+valuedouble
+valueint
+valuestring
+webserver
