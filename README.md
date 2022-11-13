@@ -12,9 +12,10 @@ First up, how do I build?
 Add cJSON.c to your project, and put cJSON.h somewhere in the header search path.
 For example, to build the test app:
 
+```shell
 gcc cJSON.c test.c -o test -lm
 ./test
-
+```
 
 As a library, cJSON exists to take away as much legwork as it can, but not get in your way.
 As a point of pragmatism (i.e. ignoring the truth), I'm going to say that you can use it
@@ -26,6 +27,7 @@ That page inspired me to write cJSON, which is a parser that tries to share the 
 philosophy as JSON itself. Simple, dumb, out of the way.
 
 Some JSON:
+```json
 {
     "name": "Jack (\"Bee\") Nimble", 
     "format": {
@@ -36,30 +38,46 @@ Some JSON:
         "frame rate": 24
     }
 }
+```
 
 Assume that you got this from a file, a webserver, or magic JSON elves, whatever,
 you have a char * to it. Everything is a cJSON struct.
 Get it parsed:
+
+```c
 	cJSON *root = cJSON_Parse(my_json_string);
+```
 
 This is an object. We're in C. We don't have objects. But we do have structs.
 What's the framerate?
 
+```c
 	cJSON *format = cJSON_GetObjectItem(root,"format");
 	int framerate = cJSON_GetObjectItem(format,"frame rate")->valueint;
-
+```
 
 Want to change the framerate?
+
+```c
 	cJSON_GetObjectItem(format,"frame rate")->valueint=25;
-	
+```
+
 Back to disk?
+
+```c
 	char *rendered=cJSON_Print(root);
+```
 
 Finished? Delete the root (this takes care of everything else).
+
+```c
 	cJSON_Delete(root);
+```
 
 That's AUTO mode. If you're going to use Auto mode, you really ought to check pointers
 before you dereference them. If you want to see how you'd build this struct in code?
+
+```c
 	cJSON *root,*fmt;
 	root=cJSON_CreateObject();	
 	cJSON_AddItemToObject(root, "name", cJSON_CreateString("Jack (\"Bee\") Nimble"));
@@ -69,6 +87,7 @@ before you dereference them. If you want to see how you'd build this struct in c
 	cJSON_AddNumberToObject(fmt,"height",		1080);
 	cJSON_AddFalseToObject (fmt,"interlace");
 	cJSON_AddNumberToObject(fmt,"frame rate",	24);
+```
 
 Hopefully we can agree that's not a lot of code? There's no overhead, no unnecessary setup.
 Look at test.c for a bunch of nice examples, mostly all ripped off the json.org site, and
@@ -89,6 +108,8 @@ Sibling hs type False, name "interlace", and a sibling:
 Sibling has type Number, name "frame rate", value 24
 
 Here's the structure:
+
+```c
 typedef struct cJSON {
 	struct cJSON *next,*prev;
 	struct cJSON *child;
@@ -101,14 +122,15 @@ typedef struct cJSON {
 
 	char *string;
 } cJSON;
+```
 
 By default all values are 0 unless set by virtue of being meaningful.
 
-next/prev is a doubly linked list of siblings. next takes you to your sibling,
+`next`/`prev` is a doubly linked list of siblings. next takes you to your sibling,
 prev takes you back from your sibling to you.
 Only objects and arrays have a "child", and it's the head of the doubly linked list.
 A "child" entry will have prev==0, but next potentially points on. The last sibling has next=0.
-The type expresses Null/True/False/Number/String/Array/Object, all of which are #defined in
+The type expresses `Null`/`True`/`False`/`Number`/`String`/`Array`/`Object`, all of which are #defined in
 cJSON.h
 
 A Number has valueint and valuedouble. If you're expecting an int, read valueint, if not read
@@ -116,14 +138,15 @@ valuedouble.
 
 Any entry which is in the linked list which is the child of an object will have a "string"
 which is the "name" of the entry. When I said "name" in the above example, that's "string".
-"string" is the JSON name for the 'variable name' if you will.
+"`string`" is the JSON name for the 'variable name' if you will.
 
 Now you can trivially walk the lists, recursively, and parse as you please.
-You can invoke cJSON_Parse to get cJSON to parse for you, and then you can take
+You can invoke `cJSON_Parse` to get cJSON to parse for you, and then you can take
 the root object, and traverse the structure (which is, formally, an N-tree),
 and tokenise as you please. If you wanted to build a callback style parser, this is how
 you'd do it (just an example, since these things are very specific):
 
+```c
 void parse_and_callback(cJSON *item,const char *prefix)
 {
 	while (item)
@@ -136,11 +159,13 @@ void parse_and_callback(cJSON *item,const char *prefix)
 		free(newprefix);
 	}
 }
+```
 
 The prefix process will build you a separated list, to simplify your callback handling.
 The 'dorecurse' flag would let the callback decide to handle sub-arrays on it's own, or
 let you invoke it per-item. For the item above, your callback might look like this:
 
+```c
 int callback(const char *name,int type,cJSON *item)
 {
 	if (!strcmp(name,"name"))	{ /* populate name */ }
@@ -151,10 +176,12 @@ int callback(const char *name,int type,cJSON *item)
 	else if (!strcmp(name,"format/frame rate")	{ /* 24 */ }
 	return 1;
 }
+```
 
 Alternatively, you might like to parse iteratively.
 You'd use:
 
+```c
 void parse_object(cJSON *item)
 {
 	int i; for (i=0;i<cJSON_GetArraySize(item);i++)
@@ -163,9 +190,11 @@ void parse_object(cJSON *item)
 		// handle subitem.	
 	}
 }
+```
 
 Or, for PROPER manual mode:
 
+```c
 void parse_object(cJSON *item)
 {
 	cJSON *subitem=item->child;
@@ -177,6 +206,7 @@ void parse_object(cJSON *item)
 		subitem=subitem->next;
 	}
 }
+```
 
 Of course, this should look familiar, since this is just a stripped-down version
 of the callback-parser.
@@ -190,6 +220,7 @@ You can, of course, hand your sub-objects to other functions to populate.
 Also, if you find a use for it, you can manually build the objects.
 For instance, suppose you wanted to build an array of objects?
 
+```c
 cJSON *objects[24];
 
 cJSON *Create_array_of_anything(cJSON **items,int num)
@@ -203,8 +234,9 @@ cJSON *Create_array_of_anything(cJSON **items,int num)
 	}
 	return root;
 }
-	
-and simply: Create_array_of_anything(objects,24);
+```
+
+and simply: `Create_array_of_anything(objects,24)`;
 
 cJSON doesn't make any assumptions about what order you create things in.
 You can attach the objects, as above, and later add children to each
